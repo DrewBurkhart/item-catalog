@@ -1,0 +1,30 @@
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+
+        <!-- Logo -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#mainNavBar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="{{ url_for('showStores') }}" class="navbar-brand">Stuffy's Clothing Warehouse</a>
+        </div>
+
+        <!-- Menu Items -->
+        <div class="collapse navbar-collapse" id="mainNavBar">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="{{ url_for('showStores') }}">Home</a></li>
+                <li><a href="{{url_for('newStore')}}">Add Store</a></li>
+                <li>
+					{%if 'username' not in session %}
+					<a href="{{url_for('showLogin')}}">Click Here to Login </a>
+					{% else %}
+					<a href="{{url_for('disconnect')}}">Logout </a>
+					{% endif %}
+				</li>
+            </ul>
+        </div>
+
+    </div>
+</nav>

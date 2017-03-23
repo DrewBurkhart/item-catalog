@@ -1,0 +1,53 @@
+body {
+    font-family: 'Lato', sans-serif;
+    width: 100vw;
+    color: #747704;
+    font-weight: 300;
+}
+
+.text-muted {
+    color: #BCBBBB;
+}
+
+.text-thin {
+    font-weight: 100;
+}
+
+.title-logo {
+    margin-top: 20px;
+}
+
+@media (min-width: 992px) {
+    .title-super {
+        font-size: 36px;
+    }
+}
+
+.header_txt {
+    color: #2d3c49;
+    font-weight: normal;;
+}
+
+.example_txt {
+     color: #2d3c49;
+     font-weight: bold;
+     font-size: 36px;
+ }
+
+.example_url {
+    color: #2d3c49;
+    font-weight: normal;
+    font-size: 18px;
+}
+
+.modal-body p {
+    color: #2d3c49;
+    font-weight: normal;
+    font-size: 18px;
+}
+
+hr {
+    border: none;
+    height: 4px;
+    background-color: #BCBBBB;
+}

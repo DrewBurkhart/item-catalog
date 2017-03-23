@@ -1,0 +1,39 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+
+	<div class = 'flash'>
+		      {% with messages = get_flashed_messages() %}
+      {% if messages %}
+          
+        <ul>
+        {% for message in messages %}
+            <li> <strong> {{ message }} </strong> </li>
+        {% endfor %}
+        </ul>
+        {% endif %}
+    {% endwith %}
+
+</div>
+
+
+	
+	<div class="row padding-top padding-bottom">
+		<div class="col-md-1"></div>
+		<div class="col-md-10 padding-none">
+			
+		</div>
+		<div class="col-md-1"></div>
+	</div>
+	{% for store in stores %}
+		<a href = "{{url_for('showCat', store_id = store.id)}}">
+			<div class="row">
+				<div class="col-md-1"></div>
+					<div class="col-md-10 store-list">
+						<h3>{{store.name}}</h3>
+					</div>
+				<div class="col-md-1"></div>
+			</div>
+		</a>
+	{% endfor %}
+{% endblock %}
