@@ -18,23 +18,23 @@
 
 ### Contents:
 
-** /static **
+**/static**
 > CSS and JS files to style the site
 
-** /templates **
+**/templates**
 > HTML files to create page templates
 
-** database_setup.py **
+**database_setup.py**
 > Python file to scaffold our database
 
-** lotsofcatalogs.py **
+**lotsofcatalogs.py**
 > Python file to populate the database
 > with some stock entities
 
-** client_secrets.json & fb_client_secrets.json **
+**client_secrets.json & fb_client_secrets.json**
 > JSON files used for Google and Facebook
 > authentication with OAuth2
 
-** project.py **
+**project.py**
 > The main Python file that describes
 > all functionality for the site
