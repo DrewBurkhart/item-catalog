@@ -11,7 +11,7 @@
 	</div>
 	<div class="row">
 		<div class="col-md-6 col-md-offset-1 padding-top">
-			<form action="#" method = "post">
+			<form action="{{ url_for('editCatItem',store_id = store_id, cat_id = item.id)}}" method = "post">
 				<div class="form-group">
 					<label for="name">Name:</label>
 					<input type ="text" maxlength="100" class="form-control" name="name" value="{{item.name }}">
@@ -45,14 +45,14 @@
 					    <input type="radio" name="category" id="category4" value="Accessories" {%if item.category =='Beverage'%}checked{%endif%}>Accessories
 					  </label>
 					</div>
-					<button type="submit" class="btn btn-default" id="submit" type="submit">
+					<button type="submit" class="btn btn-default" id="submit">
 					<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>Save</button>
-					<a href = '{{url_for('showStores')}}'>
-						<button class="btn btn-default delete">
-						<span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Cancel</button>
-					</a>
 				</div>
 			</form>
+			<a href ="{{ url_for('showCat', store_id=store_id) }}">
+				<button class="btn btn-default delete">
+				<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>Cancel</button>
+			</a>
 		</div>
 	</div>
 {% endblock %}

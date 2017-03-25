@@ -2,9 +2,13 @@
 {% block content %}
 {% include "header.html" %}
 
-	<div class = 'flash'>
-		      {% with messages = get_flashed_messages() %}
-      {% if messages %}
+<div class="row divider blue">
+	<div class="col-md-12"></div>
+</div>
+
+<div class = 'flash'>
+	{% with messages = get_flashed_messages() %}
+      	{% if messages %}
           
         <ul>
         {% for message in messages %}
@@ -15,13 +19,11 @@
     {% endwith %}
 
 </div>
-
-
 	
 	<div class="row padding-top padding-bottom">
 		<div class="col-md-1"></div>
 		<div class="col-md-10 padding-none">
-			
+			<h3 class="center">Choose a store</h3>
 		</div>
 		<div class="col-md-1"></div>
 	</div>
@@ -30,7 +32,7 @@
 			<div class="row">
 				<div class="col-md-1"></div>
 					<div class="col-md-10 store-list">
-						<h3>{{store.name}}</h3>
+						<h1>{{store.name}}</h1>
 					</div>
 				<div class="col-md-1"></div>
 			</div>

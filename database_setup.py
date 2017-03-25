@@ -55,6 +55,7 @@ class CatItem(Base):
             'id': self.id,
             'price': self.price,
             'category': self.category,
+            'picture': self.picture
         }
 
 

@@ -2,15 +2,15 @@
 {% block content %}
 {% include "header.html" %}
 	
-	<div class="row divider green">
+	<div class="row divider blue">
 		<div class="col-md-12"></div>
 	</div>
 	<div class="row banner cat">
-		<div class="col-md-11 col-md-offset-1 padding-none">
+		<div class="col-md-12 padding-none cat-title rounded">
 			<h1>{{ store.name }}
 			<figure class="creator">
-				<img src="{{ creator.picture}}">
-				<figcaption>{{ creator.name }}</figcaption>
+				<img src="{{ creator.picture }}" alt="{{ creator.name }}">
+				<!-- <figcaption>{{ creator.name }}</figcaption> -->
 			</figure>
 			</h1>
 
@@ -36,6 +36,7 @@
 			{% endwith %}
 		</div>
 	</div>
+	
 	{% if items !=[] %}	
 		<div class="row">
 			<div class="col-md-1"></div>
@@ -43,7 +44,7 @@
 				<h2>Shirts</h2>
 					{% for i in items %}
 						{% if i.category == 'Shirts' %}
-							<div class="cat-item">
+							<div class="cat-item rounded">
 								<img src={{ i.picture }} alt={{i.name}} height=100 class="img-responsive img-rounded">
 								<h3 class="cat-name">{{i.name}}</h3>
 								<p>{{i.description}}</p>
@@ -57,7 +58,7 @@
 				<h2>Shorts</h2>
 					{% for i in items %}
 						{% if i.category == 'Shorts' %}
-						<div class="cat-item">
+						<div class="cat-item rounded">
 							<img src={{ i.picture }} alt={{i.name}} height=100 class="img-responsive img-rounded">
 							<h3 class="cat-name">{{i.name}}</h3>
 							<p>{{i.description}}</p>
@@ -71,7 +72,7 @@
 				<h2>Sandals</h2>
 					{% for i in items %}
 						{% if i.category == 'Sandals' %}
-						<div class="cat-item">
+						<div class="cat-item rounded">
 							<img src={{ i.picture }} alt={{i.name}} height=100 class="img-responsive img-rounded">
 							<h3 class="cat-name">{{i.name}}</h3>
 							<p>{{i.description}}</p>

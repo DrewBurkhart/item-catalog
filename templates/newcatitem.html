@@ -14,17 +14,20 @@
 			<form action="#" method = "post">
 				<div class="form-group">
 					<label for="name">Name:</label>
-					<input type ="text" maxlength="50" class="form-control" name="name"placeholder="Name of the category">
+					<input type ="text" maxlength="50" class="form-control" name="name" placeholder="Name of the item">
 
 					<label for="description">Description:</label>
-					<textarea class="form-control" maxlength="250" rows="3" name="description" placeholder="Description of the category"></textarea>
+					<textarea class="form-control" maxlength="250" rows="3" name="description" placeholder="Description of the item"></textarea>
+
+					<label for="picture">Picture</label>
+					<input type="text" maxlength="250" class="form-control" name="picture" placeholder="Image URL">
 
 					<label for="price">Price:</label>
 					<div class="input-group">
 						<div class="input-group-addon">$</div>
 						<input type ="text" class="form-control" maxlength="10" name="price" placeholder="Price in $">
 					</div>
-					<label for="category">Course:</label>
+					<label for="category">Category:</label>
 					<div class="radio">
 					  <label>
 					    <input type="radio" name="category" id="category1" value="Shirts">Shirts

@@ -1,15 +1,16 @@
 {% extends "main.html" %}
 {% block content %}
 {% include "header.html" %}
-	<div class="row divider green">
+	
+	<div class="row divider blue">
 		<div class="col-md-12"></div>
 	</div>
 	<div class="row banner cat">
-		<div class="col-md-11 col-md-offset-1 padding-none">
+		<div class="col-md-12 padding-none cat-title rounded">
 			<h1>{{ store.name }}
 			<figure class="creator">
-				<img src="{{ url_for('static', filename='blank_user.gif') }}">
-				<figcaption>Catalogcreator's name goes here</figcaption>
+				<img src="{{ creator.picture }}" alt="{{ creator.name }}">
+				<!-- <figcaption>{{ creator.user_id }}</figcaption> -->
 			</figure>
 			</h1>
 
@@ -39,7 +40,7 @@
 			</a>
 			<a href="{{url_for('newCatItem', store_id = store.id )}}">
 				<button class="btn btn-default" id="new-cat-item">
-					<span class="glyphicon glyphicon-glass" aria-hidden="true"></span>Add CatalogItem
+					<span class="glyphicon glyphicon-glass" aria-hidden="true"></span>Add Catalog Item
 				</button>
 			</a>
 						<a href="{{url_for('deleteStore', store_id = store.id )}}">
@@ -57,8 +58,8 @@
 			<div class="col-md-3">
 				<h2>Shirts</h2>
 					{% for i in items %}
-						{% if i.course == 'Shirts' %}
-							<div class="cat-item">
+						{% if i.category == 'Shirts' %}
+							<div class="cat-item rounded">
 								<img src={{ i.picture }} alt={{i.name}} height=100 class="img-responsive img-rounded">
 								<h3 class="cat-name">{{i.name}}</h3>
 								<p>{{i.description}}</p>
@@ -72,8 +73,8 @@
 			<div class="col-md-4">			
 				<h2>Shorts</h2>
 					{% for i in items %}
-						{% if i.course == 'Shorts' %}
-						<div class="cat-item">
+						{% if i.category == 'Shorts' %}
+						<div class="cat-item rounded">
 							<img src={{ i.picture }} alt={{i.name}} height=100 class="img-responsive img-rounded">
 							<h3 class="cat-name">{{i.name}}</h3>
 							<p>{{i.description}}</p>
@@ -87,8 +88,8 @@
 			<div class="col-md-3">
 				<h2>Sandals</h2>
 					{% for i in items %}
-						{% if i.course == 'Sandals' %}
-						<div class="cat-item">
+						{% if i.category == 'Sandals' %}
+						<div class="cat-item rounded">
 							<img src={{ i.picture }} alt={{i.name}} height=100 class="img-responsive img-rounded">
 							<h3 class="cat-name">{{i.name}}</h3>
 							<p>{{i.description}}</p>
@@ -100,7 +101,7 @@
 					{% endfor %}
 				<h2>Accessories</h2>
 					{% for i in items %}
-						{% if i.course == 'Accessories' %}
+						{% if i.category == 'Accessories' %}
 						<div class="cat-item">
 							<img src={{ i.picture }} alt={{i.name}} height=100 class="img-responsive img-rounded">
 							<h3 class="cat-name">{{i.name}}</h3>

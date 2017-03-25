@@ -362,13 +362,14 @@ def newCatItem(store_id):
     store = session.query(Store).filter_by(id=store_id).one()
     if login_session['user_id'] != store.user_id:
         return "<script>function myFunction() {alert('You are not authorized to add cat items to this store. Please create your own store in order to add items.');}</script><body onload='myFunction()''>"
-        if request.method == 'POST':
-            newItem = CatItem(name=request.form['name'], description=request.form['description'], price=request.form[
-                               'price'], category=request.form['category'], store_id=store_id, user_id=store.user_id)
-            session.add(newItem)
-            session.commit()
-            flash('New Catalog%s Item Successfully Created' % (newItem.name))
-            return redirect(url_for('showCat', store_id=store_id))
+    if request.method == 'POST':
+        newItem = CatItem(name=request.form['name'], description=request.form['description'], picture=request.form['picture'], 
+                            price=request.form['price'], category=request.form['category'], store_id=store_id, user_id=store.user_id)
+        session.add(newItem)
+        session.commit()
+        print newItem
+        flash('New Catalog %s Item Successfully Created' % (newItem.name))
+        return redirect(url_for('showCat', store_id=store_id))
     else:
         return render_template('newcatitem.html', store_id=store_id)
 
