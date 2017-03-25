@@ -1,16 +1,17 @@
+"""Project file"""
+import json
+import random
+import string
+import httplib2
+import requests
 from flask import Flask, render_template, request, redirect, jsonify, url_for, flash
+from flask import session as login_session
+from flask import make_response
 from sqlalchemy import create_engine, asc
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Store, CatItem, User
-from flask import session as login_session
-import random
-import string
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
-import httplib2
-import json
-from flask import make_response
-import requests
 
 app = Flask(__name__)
 
@@ -30,6 +31,7 @@ session = DBSession()
 # Create anti-forgery state token
 @app.route('/login')
 def showLogin():
+    """Used to bring up the login page"""
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)
                     for x in xrange(32))
     login_session['state'] = state
@@ -39,6 +41,7 @@ def showLogin():
 
 @app.route('/fbconnect', methods=['POST'])
 def fbconnect():
+    """Used for facebook login"""
     if request.args.get('state') != login_session['state']:
         response = make_response(json.dumps('Invalid state parameter.'), 401)
         response.headers['Content-Type'] = 'application/json'
@@ -105,6 +108,7 @@ def fbconnect():
 
 @app.route('/fbdisconnect')
 def fbdisconnect():
+    """Used to disconnect from facebook login"""
     facebook_id = login_session['facebook_id']
     # The access token must me included to successfully logout
     access_token = login_session['access_token']
@@ -116,6 +120,7 @@ def fbdisconnect():
 
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
+    """Used for google login"""
     # Validate state token
     if request.args.get('state') != login_session['state']:
         response = make_response(json.dumps('Invalid state parameter.'), 401)
@@ -209,8 +214,9 @@ def gconnect():
 
 
 def createUser(login_session):
+    """Used to create a user fro OAuth2 login"""
     newUser = User(name=login_session['username'], email=login_session[
-                   'email'], picture=login_session['picture'])
+        'email'], picture=login_session['picture'])
     session.add(newUser)
     session.commit()
     user = session.query(User).filter_by(email=login_session['email']).one()
@@ -229,11 +235,10 @@ def getUserID(email):
     except:
         return None
 
-# DISCONNECT - Revoke a current user's token and reset their login_session
-
 
 @app.route('/gdisconnect')
 def gdisconnect():
+    """Used to disconnect from google login"""
     # Only disconnect a connected user.
     credentials = login_session.get('credentials')
     if credentials is None:
@@ -256,6 +261,7 @@ def gdisconnect():
 # JSON APIs to view Store Information
 @app.route('/store/<int:store_id>/catalog/JSON')
 def storeCatJSON(store_id):
+    """For catalog JSON"""
     store = session.query(Store).filter_by(id=store_id).one()
     items = session.query(CatItem).filter_by(
         store_id=store_id).all()
@@ -264,31 +270,31 @@ def storeCatJSON(store_id):
 
 @app.route('/store/<int:store_id>/catalog/<int:cat_id>/JSON')
 def catItemJSON(store_id, cat_id):
+    """For catalog item JSON"""
     Cat_Item = session.query(CatItem).filter_by(id=cat_id).one()
     return jsonify(Cat_Item=Cat_Item.serialize)
 
 
 @app.route('/store/JSON')
 def storesJSON():
+    """For store list JSON"""
     stores = session.query(Store).all()
     return jsonify(stores=[r.serialize for r in stores])
 
 
-# Show all stores
 @app.route('/')
 @app.route('/store/')
 def showStores():
+    """Shows main page"""
     stores = session.query(Store).order_by(asc(Store.name))
     if 'username' not in login_session:
         return render_template('publicstores.html', stores=stores)
     else:
         return render_template('stores.html', stores=stores)
 
-# Create a new store
-
-
 @app.route('/store/new/', methods=['GET', 'POST'])
 def newStore():
+    """Used to create a new store"""
     if 'username' not in login_session:
         return redirect('/login')
     if request.method == 'POST':
@@ -301,11 +307,10 @@ def newStore():
     else:
         return render_template('newStore.html')
 
-# Edit a store
-
 
 @app.route('/store/<int:store_id>/edit/', methods=['GET', 'POST'])
 def editStore(store_id):
+    """Used to edit a store"""
     editedStore = session.query(
         Store).filter_by(id=store_id).one()
     if 'username' not in login_session:
@@ -321,9 +326,9 @@ def editStore(store_id):
         return render_template('editStore.html', store=editedStore)
 
 
-# Delete a store
 @app.route('/store/<int:store_id>/delete/', methods=['GET', 'POST'])
 def deleteStore(store_id):
+    """Used to delete a store"""
     storeToDelete = session.query(
         Store).filter_by(id=store_id).one()
     if 'username' not in login_session:
@@ -338,12 +343,11 @@ def deleteStore(store_id):
     else:
         return render_template('deleteStore.html', store=storeToDelete)
 
-# Show a store cat
-
 
 @app.route('/store/<int:store_id>/')
 @app.route('/store/<int:store_id>/catalog/')
 def showCat(store_id):
+    """Shows all items for a given store"""
     store = session.query(Store).filter_by(id=store_id).one()
     creator = getUserInfo(store.user_id)
     items = session.query(CatItem).filter_by(
@@ -354,16 +358,16 @@ def showCat(store_id):
         return render_template('catalog.html', items=items, store=store, creator=creator)
 
 
-# Create a new cat item
 @app.route('/store/<int:store_id>/catalog/new/', methods=['GET', 'POST'])
 def newCatItem(store_id):
+    """Used to create a new catalog item"""
     if 'username' not in login_session:
         return redirect('/login')
     store = session.query(Store).filter_by(id=store_id).one()
     if login_session['user_id'] != store.user_id:
         return "<script>function myFunction() {alert('You are not authorized to add cat items to this store. Please create your own store in order to add items.');}</script><body onload='myFunction()''>"
     if request.method == 'POST':
-        newItem = CatItem(name=request.form['name'], description=request.form['description'], picture=request.form['picture'], 
+        newItem = CatItem(name=request.form['name'], description=request.form['description'], picture=request.form['picture'],
                             price=request.form['price'], category=request.form['category'], store_id=store_id, user_id=store.user_id)
         session.add(newItem)
         session.commit()
@@ -373,11 +377,10 @@ def newCatItem(store_id):
     else:
         return render_template('newcatitem.html', store_id=store_id)
 
-# Edit a cat item
-
 
 @app.route('/store/<int:store_id>/catalog/<int:cat_id>/edit', methods=['GET', 'POST'])
 def editCatItem(store_id, cat_id):
+    """Used to edit an item"""
     if 'username' not in login_session:
         return redirect('/login')
     editedItem = session.query(CatItem).filter_by(id=cat_id).one()
@@ -401,9 +404,9 @@ def editCatItem(store_id, cat_id):
         return render_template('editcatitem.html', store_id=store_id, cat_id=cat_id, item=editedItem)
 
 
-# Delete a cat item
 @app.route('/store/<int:store_id>/catalog/<int:cat_id>/delete', methods=['GET', 'POST'])
 def deleteCatItem(store_id, cat_id):
+    """Used to delete an item"""
     if 'username' not in login_session:
         return redirect('/login')
     store = session.query(Store).filter_by(id=store_id).one()
@@ -419,9 +422,9 @@ def deleteCatItem(store_id, cat_id):
         return render_template('deleteCatItem.html', item=itemToDelete)
 
 
-# Disconnect based on provider
 @app.route('/disconnect')
 def disconnect():
+    """Used to disconnect based on provider"""
     if 'provider' in login_session:
         if login_session['provider'] == 'google':
             gdisconnect()

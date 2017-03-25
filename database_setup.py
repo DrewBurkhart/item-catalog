@@ -1,3 +1,4 @@
+"""Database Setup File"""
 from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
@@ -7,6 +8,7 @@ Base = declarative_base()
 
 
 class User(Base):
+    """Creates the User class"""
     __tablename__ = 'user'
 
     id = Column(Integer, primary_key=True)
@@ -16,6 +18,7 @@ class User(Base):
 
 
 class Store(Base):
+    """Creates the Store class"""
     __tablename__ = 'store'
 
     id = Column(Integer, primary_key=True)
@@ -33,6 +36,7 @@ class Store(Base):
 
 
 class CatItem(Base):
+    """Creates the Catalog Item Class"""
     __tablename__ = 'cat_item'
 
     name = Column(String(80), nullable=False)
@@ -60,6 +64,5 @@ class CatItem(Base):
 
 
 engine = create_engine('sqlite:///storecatalog.db')
-
 
 Base.metadata.create_all(engine)
