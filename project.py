@@ -4,9 +4,9 @@ import random
 import string
 import httplib2
 import requests
-from flask import Flask, render_template, request, redirect, jsonify, url_for, flash
+from flask import Flask, render_template, request, redirect, jsonify, url_for
 from flask import session as login_session
-from flask import make_response
+from flask import make_response, flash
 from sqlalchemy import create_engine, asc
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Store, CatItem, User
@@ -53,7 +53,8 @@ def fbconnect():
         'web']['app_id']
     app_secret = json.loads(
         open('fb_client_secrets.json', 'r').read())['web']['app_secret']
-    url = 'https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id=%s&client_secret=%s&fb_exchange_token=%s' % (
+    url = """https://graph.facebook.com/oauth/access_token?grant_type=fb_
+    exchange_token&client_id=%s&client_secret=%s&fb_exchange_token=%s""" % (
         app_id, app_secret, access_token)
     h = httplib2.Http()
     result = h.request(url, 'GET')[1]
@@ -62,7 +63,6 @@ def fbconnect():
     userinfo_url = "https://graph.facebook.com/v2.4/me"
     # strip expire tag from access token
     token = result.split("&")[0]
-
 
     url = 'https://graph.facebook.com/v2.4/me?%s&fields=name,id,email' % token
     h = httplib2.Http()
@@ -75,12 +75,14 @@ def fbconnect():
     login_session['email'] = data["email"]
     login_session['facebook_id'] = data["id"]
 
-    # The token must be stored in the login_session in order to properly logout, let's strip out the information before the equals sign in our token
+    # The token must be stored in the login_session in order to properly logout
+    # let's strip out the information before the equals sign in our token
     stored_token = token.split("=")[1]
     login_session['access_token'] = stored_token
 
     # Get user picture
-    url = 'https://graph.facebook.com/v2.4/me/picture?%s&redirect=0&height=200&width=200' % token
+    url = """https://graph.facebook.com/v2.4/me/picture?%s&redirect=0&
+    height=200&width=200""" % token
     h = httplib2.Http()
     result = h.request(url, 'GET')[1]
     data = json.loads(result)
@@ -100,7 +102,8 @@ def fbconnect():
     output += '!</h1>'
     output += '<img src="'
     output += login_session['picture']
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+    output += """ " style = "width: 300px; height: 300px;border-radius: 150px;
+    -webkit-border-radius: 150px;-moz-border-radius: 150px;"> """
 
     flash("Now logged in as %s" % login_session['username'])
     return output
@@ -112,7 +115,8 @@ def fbdisconnect():
     facebook_id = login_session['facebook_id']
     # The access token must me included to successfully logout
     access_token = login_session['access_token']
-    url = 'https://graph.facebook.com/%s/permissions?access_token=%s' % (facebook_id,access_token)
+    url = 'https://graph.facebook.com/%s/permissions?access_token=%s' % (
+        facebook_id, access_token)
     h = httplib2.Http()
     result = h.request(url, 'DELETE')[1]
     return "you have been logged out"
@@ -165,14 +169,14 @@ def gconnect():
         response = make_response(
             json.dumps("Token's client ID does not match app's."), 401)
         print "Token's client ID does not match app's."
+        print result['issued_to']
         response.headers['Content-Type'] = 'application/json'
         return response
 
     stored_credentials = login_session.get('credentials')
     stored_gplus_id = login_session.get('gplus_id')
     if stored_credentials is not None and gplus_id == stored_gplus_id:
-        response = make_response(json.dumps('Current user is already connected.'),
-                                 200)
+        response = make_response(json.dumps('User is already connected'), 200)
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -205,7 +209,8 @@ def gconnect():
     output += '!</h1>'
     output += '<img src="'
     output += login_session['picture']
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+    output += """ " style = "width: 300px; height: 300px;border-radius: 150px;
+    -webkit-border-radius: 150px;-moz-border-radius: 150px;"> """
     flash("you are now logged in as %s" % login_session['username'])
     print "done!"
     return output
@@ -292,6 +297,7 @@ def showStores():
     else:
         return render_template('stores.html', stores=stores)
 
+
 @app.route('/store/new/', methods=['GET', 'POST'])
 def newStore():
     """Used to create a new store"""
@@ -316,7 +322,9 @@ def editStore(store_id):
     if 'username' not in login_session:
         return redirect('/login')
     if editedStore.user_id != login_session['user_id']:
-        return "<script>function myFunction() {alert('You are not authorized to edit this store. Please create your own store in order to edit.');}</script><body onload='myFunction()''>"
+        return """<script>function myFunction() {alert('You are not authorized
+        to edit this store. Please create your own store in order to edit.');}
+        </script><body onload='myFunction()''>"""
     if request.method == 'POST':
         if request.form['name']:
             editedStore.name = request.form['name']
@@ -334,7 +342,9 @@ def deleteStore(store_id):
     if 'username' not in login_session:
         return redirect('/login')
     if storeToDelete.user_id != login_session['user_id']:
-        return "<script>function myFunction() {alert('You are not authorized to delete this store. Please create your own store in order to delete.');}</script><body onload='myFunction()''>"
+        return """<script>function myFunction() {alert('You are not authorized
+        to delete this store. Please create your own store in order to delete')
+        ;}</script><body onload='myFunction()''>"""
     if request.method == 'POST':
         session.delete(storeToDelete)
         flash('%s Successfully Deleted' % storeToDelete.name)
@@ -352,10 +362,21 @@ def showCat(store_id):
     creator = getUserInfo(store.user_id)
     items = session.query(CatItem).filter_by(
         store_id=store_id).all()
-    if 'username' not in login_session or creator.id != login_session['user_id']:
-        return render_template('publiccat.html', items=items, store=store, creator=creator)
+    if ('username' not in login_session or
+            creator.id != login_session['user_id']):
+        return render_template(
+            'publiccat.html',
+            items=items,
+            store=store,
+            creator=creator
+        )
     else:
-        return render_template('catalog.html', items=items, store=store, creator=creator)
+        return render_template(
+            'catalog.html',
+            items=items,
+            store=store,
+            creator=creator
+        )
 
 
 @app.route('/store/<int:store_id>/catalog/new/', methods=['GET', 'POST'])
@@ -365,10 +386,19 @@ def newCatItem(store_id):
         return redirect('/login')
     store = session.query(Store).filter_by(id=store_id).one()
     if login_session['user_id'] != store.user_id:
-        return "<script>function myFunction() {alert('You are not authorized to add cat items to this store. Please create your own store in order to add items.');}</script><body onload='myFunction()''>"
+        return """<script>function myFunction() {alert('You are not authorized
+        to add catalog items to this store. Please create your own store in
+        order to add items.');}</script><body onload='myFunction()''>"""
     if request.method == 'POST':
-        newItem = CatItem(name=request.form['name'], description=request.form['description'], picture=request.form['picture'],
-                            price=request.form['price'], category=request.form['category'], store_id=store_id, user_id=store.user_id)
+        newItem = CatItem(
+            name=request.form['name'],
+            description=request.form['description'],
+            picture=request.form['picture'],
+            price=request.form['price'],
+            category=request.form['category'],
+            store_id=store_id,
+            user_id=store.user_id
+        )
         session.add(newItem)
         session.commit()
         print newItem
@@ -378,7 +408,8 @@ def newCatItem(store_id):
         return render_template('newcatitem.html', store_id=store_id)
 
 
-@app.route('/store/<int:store_id>/catalog/<int:cat_id>/edit', methods=['GET', 'POST'])
+@app.route('/store/<int:store_id>/catalog/<int:cat_id>/edit',
+           methods=['GET', 'POST'])
 def editCatItem(store_id, cat_id):
     """Used to edit an item"""
     if 'username' not in login_session:
@@ -386,7 +417,9 @@ def editCatItem(store_id, cat_id):
     editedItem = session.query(CatItem).filter_by(id=cat_id).one()
     store = session.query(Store).filter_by(id=store_id).one()
     if login_session['user_id'] != store.user_id:
-        return "<script>function myFunction() {alert('You are not authorized to edit cat items to this store. Please create your own store in order to edit items.');}</script><body onload='myFunction()''>"
+        return """<script>function myFunction() {alert('You are not authorized
+        to edit catalog items to this store. Please create your own store in
+        order to edit items.');}</script><body onload='myFunction()''>"""
     if request.method == 'POST':
         if request.form['name']:
             editedItem.name = request.form['name']
@@ -401,10 +434,16 @@ def editCatItem(store_id, cat_id):
         flash('CatalogItem Successfully Edited')
         return redirect(url_for('showCat', store_id=store_id))
     else:
-        return render_template('editcatitem.html', store_id=store_id, cat_id=cat_id, item=editedItem)
+        return render_template(
+            'editcatitem.html',
+            store_id=store_id,
+            cat_id=cat_id,
+            item=editedItem
+        )
 
 
-@app.route('/store/<int:store_id>/catalog/<int:cat_id>/delete', methods=['GET', 'POST'])
+@app.route('/store/<int:store_id>/catalog/<int:cat_id>/delete',
+           methods=['GET', 'POST'])
 def deleteCatItem(store_id, cat_id):
     """Used to delete an item"""
     if 'username' not in login_session:
@@ -412,7 +451,9 @@ def deleteCatItem(store_id, cat_id):
     store = session.query(Store).filter_by(id=store_id).one()
     itemToDelete = session.query(CatItem).filter_by(id=cat_id).one()
     if login_session['user_id'] != store.user_id:
-        return "<script>function myFunction() {alert('You are not authorized to delete cat items to this store. Please create your own store in order to delete items.');}</script><body onload='myFunction()''>"
+        return """<script>function myFunction() {alert('You are not authorized
+        to delete cat items to this store. Please create your own store in
+        order to delete items.');}</script><body onload='myFunction()''>"""
     if request.method == 'POST':
         session.delete(itemToDelete)
         session.commit()
@@ -429,7 +470,6 @@ def disconnect():
         if login_session['provider'] == 'google':
             gdisconnect()
             del login_session['gplus_id']
-            del login_session['credentials']
         if login_session['provider'] == 'facebook':
             fbdisconnect()
             del login_session['facebook_id']
