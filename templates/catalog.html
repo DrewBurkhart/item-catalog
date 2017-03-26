@@ -18,8 +18,8 @@
 	</div>
 
 <div class = 'flash'>
-		      {% with messages = get_flashed_messages() %}
-      {% if messages %}
+	{% with messages = get_flashed_messages() %}
+    {% if messages %}
           
         <ul>
         {% for message in messages %}
@@ -116,4 +116,5 @@
 			<div class="col-md-1"></div>
 		</div>
 	{% endif %}
+	
 {% endblock %}

@@ -1,26 +1,23 @@
 {% extends "main.html" %}
 {% block content %}
 {% include "header.html" %}
+
 <head>
 
   <!--LOAD PRE-REQUISITES FOR GOOGLE SIGN IN -->
-   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
   </script>
 
-<script src="//apis.google.com/js/platform.js?onload=start"> </script>
+  <script src="//apis.google.com/js/platform.js?onload=start"> </script>
 
 <!-- END PRE-REQUISITES FOR GOOGLE SIGN IN -->
 
-
 </head>
-
-
 <body>  
 
 <center>
 <h1>Welcome Back!</h1><br />
 <!-- GOOGLE PLUS SIGN IN-->
-
           
           <div id="signInButton">
           <span class="g-signin"
@@ -43,7 +40,9 @@ function signInCallback(authResult) {
     // Hide the sign-in button now that the user is authorized
     $('#signinButton').attr('style', 'display: none');
 
-    // Send the one-time-use code to the server, if the server responds, write a 'login successful' message to the web page and then redirect back to the main stores page
+    // Send the one-time-use code to the server, if the server responds, 
+    // write a 'login successful' message to the web page and then redirect 
+    // back to the main stores page
     $.ajax({
       type: 'POST',
       url: '/gconnect?state={{STATE}}',
@@ -58,13 +57,11 @@ function signInCallback(authResult) {
           window.location.href = "/store";
          }, 4000);
           
-
-      } else if (authResult['error']) {
-
-    console.log('There was an error: ' + authResult['error']);
-  } else {
-        $('#result').html('Failed to make a server-side call. Check your configuration and console.');
-         }
+          } else if (authResult['error']) {
+            console.log('There was an error: ' + authResult['error']);
+          } else {
+            $('#result').html('Failed to make a server-side call. Check your configuration and console.');
+        }
 
       }
       
@@ -119,15 +116,11 @@ function signInCallback(authResult) {
           window.location.href = "/store";
          }, 4000);
           
-
-      } else {
-        $('#result').html('Failed to make a server-side call. Check your configuration and console.');
-         }
-
+        } else {
+          $('#result').html('Failed to make a server-side call. Check your configuration and console.');
+        }
       }
-      
   });
-
 
     });
   }
@@ -146,4 +139,5 @@ function signInCallback(authResult) {
 </button>
 <!--END FACEBOOK SIGN IN -->
 </center>
+
 {% endblock %}
