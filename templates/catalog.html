@@ -1,7 +1,7 @@
 {% extends "main.html" %}
 {% block content %}
 {% include "header.html" %}
-	
+
 	<div class="row divider blue">
 		<div class="col-md-12"></div>
 	</div>
@@ -20,7 +20,7 @@
 <div class = 'flash'>
 	{% with messages = get_flashed_messages() %}
     {% if messages %}
-          
+
         <ul>
         {% for message in messages %}
             <li> <strong> {{ message }} </strong> </li>
@@ -51,8 +51,8 @@
 		</div>
 		<div class="col-md-7"></div>
 	</div>
-	
-	{% if items !=[] %}	
+
+	{% if items !=[] %}
 		<div class="row">
 			<div class="col-md-1"></div>
 			<div class="col-md-3">
@@ -64,13 +64,15 @@
 								<h3 class="cat-name">{{i.name}}</h3>
 								<p>{{i.description}}</p>
 								<p class="cat-price">{{i.price}}</p>
-								<a href='{{url_for('editCatItem', store_id = store.id, cat_id=i.id ) }}'>Edit</a> | 
+								<a href='{{url_for('editCatItem', store_id = store.id, cat_id=i.id ) }}'>Edit</a> |
 								<a href='{{url_for('deleteCatItem', store_id = store.id, cat_id=i.id ) }}'>Delete</a>
 							</div>
+						{% elif i == [] %}
+							<div>No items in this category</div>
 						{% endif %}
 					{% endfor %}
 			</div>
-			<div class="col-md-4">			
+			<div class="col-md-4">
 				<h2>Shorts</h2>
 					{% for i in items %}
 						{% if i.category == 'Shorts' %}
@@ -79,9 +81,11 @@
 							<h3 class="cat-name">{{i.name}}</h3>
 							<p>{{i.description}}</p>
 							<p class="cat-price">{{i.price}}</p>
-							<a href='{{url_for('editCatItem', store_id = store.id, cat_id=i.id ) }}'>Edit</a> | 
+							<a href='{{url_for('editCatItem', store_id = store.id, cat_id=i.id ) }}'>Edit</a> |
 							<a href='{{url_for('deleteCatItem', store_id = store.id, cat_id=i.id ) }}'>Delete</a>
 						</div>
+						{% elif i == [] %}
+							<div>No items in this category</div>
 						{% endif %}
 					{% endfor %}
 			</div>
@@ -94,9 +98,11 @@
 							<h3 class="cat-name">{{i.name}}</h3>
 							<p>{{i.description}}</p>
 							<p class="cat-price">{{i.price}}</p>
-							<a href='{{url_for('editCatItem', store_id = store.id, cat_id=i.id ) }}'>Edit</a> | 
+							<a href='{{url_for('editCatItem', store_id = store.id, cat_id=i.id ) }}'>Edit</a> |
 							<a href='{{url_for('deleteCatItem', store_id = store.id, cat_id=i.id ) }}'>Delete</a>
 						</div>
+						{% elif i == [] %}
+							<div>No items in this category</div>
 						{% endif %}
 					{% endfor %}
 				<h2>Accessories</h2>
@@ -107,14 +113,16 @@
 							<h3 class="cat-name">{{i.name}}</h3>
 							<p>{{i.description}}</p>
 							<p class="cat-price">{{i.price}}</p>
-							<a href='{{url_for('editCatItem', store_id = store.id, cat_id=i.id ) }}'>Edit</a> | 
+							<a href='{{url_for('editCatItem', store_id = store.id, cat_id=i.id ) }}'>Edit</a> |
 							<a href='{{url_for('deleteCatItem', store_id = store.id, cat_id=i.id ) }}'>Delete</a>
 						</div>
+						{% elif i == [] %}
+							<div>No items in this category</div>
 						{% endif %}
 					{% endfor %}
 			</div>
 			<div class="col-md-1"></div>
 		</div>
 	{% endif %}
-	
+
 {% endblock %}

@@ -9,7 +9,7 @@
 <div class = 'flash'>
 	{% with messages = get_flashed_messages() %}
     	{% if messages %}
-          
+
         <ul>
         {% for message in messages %}
             <li> <strong> {{ message }} </strong> </li>
@@ -19,11 +19,11 @@
     {% endwith %}
 
 </div>
-	
+
 	<div class="row padding-top padding-bottom">
 		<div class="col-md-1"></div>
 		<div class="col-md-10 padding-none">
-			<h3 class="center">Choose a store</h3>
+			<h2 class="center">Choose a store</h2>
 			<a href="{{url_for('newStore')}}">
 				<button class="btn btn-default" id="new-store">
 					<span class="glyphicon glyphicon-cutlery rounded center" aria-hidden="true"></span>Add Store
@@ -43,5 +43,5 @@
 			</div>
 		</a>
 	{% endfor %}
-	
+
 {% endblock %}
