@@ -13,12 +13,13 @@
 <!-- END PRE-REQUISITES FOR GOOGLE SIGN IN -->
 
 </head>
-<body>  
+<body>
 
 <center>
 <h1>Welcome Back!</h1><br />
+<div>Log in with you Google account </div><br />
 <!-- GOOGLE PLUS SIGN IN-->
-          
+
           <div id="signInButton">
           <span class="g-signin"
             data-scope="openid email"
@@ -40,8 +41,8 @@ function signInCallback(authResult) {
     // Hide the sign-in button now that the user is authorized
     $('#signinButton').attr('style', 'display: none');
 
-    // Send the one-time-use code to the server, if the server responds, 
-    // write a 'login successful' message to the web page and then redirect 
+    // Send the one-time-use code to the server, if the server responds,
+    // write a 'login successful' message to the web page and then redirect
     // back to the main stores page
     $.ajax({
       type: 'POST',
@@ -56,7 +57,7 @@ function signInCallback(authResult) {
          setTimeout(function() {
           window.location.href = "/store";
          }, 4000);
-          
+
           } else if (authResult['error']) {
             console.log('There was an error: ' + authResult['error']);
           } else {
@@ -64,7 +65,7 @@ function signInCallback(authResult) {
         }
 
       }
-      
+
   }); } }
 </script>
 
@@ -77,7 +78,7 @@ function signInCallback(authResult) {
   window.fbAsyncInit = function() {
   FB.init({
     appId      : '1284860634927111',
-    cookie     : true,  // enable cookies to allow the server to access 
+    cookie     : true,  // enable cookies to allow the server to access
                         // the session
     xfbml      : true,  // parse social plugins on this page
     version    : 'v2.2' // use version 2.2
@@ -115,7 +116,7 @@ function signInCallback(authResult) {
          setTimeout(function() {
           window.location.href = "/store";
          }, 4000);
-          
+
         } else {
           $('#result').html('Failed to make a server-side call. Check your configuration and console.');
         }
@@ -126,9 +127,9 @@ function signInCallback(authResult) {
   }
 </script>
 
-
+<div>Log in with you Facebook account </div><br />
 <button>
-         
+
 
 <fb:login-button scope="public_profile,email" onlogin="sendTokenToServer();">
 <a href='javascript:sendTokenToServer()'>Login with Facebook</a>
